@@ -194,3 +194,38 @@ find_library(LIBRT rt)
 if(LIBRT)
   target_link_libraries(coreOTA_Agent_Demo PRIVATE rt)
 endif()
+
+add_executable(
+  coreOTA_CustomJob_Demo
+  ./demo/simple-Custom-Orchestrator/main.c
+  ./demo/simple-Custom-Orchestrator/ota_demo.c
+  ./demo/simple-Custom-Orchestrator/custom_job_parser.c
+  ./demo/os/ota_os_freertos.c
+  ./demo/transport/openssl_posix.c
+  ./demo/transport/sockets_posix.c
+  ./demo/transport/transport_wrapper.c
+  ./demo/utils/clock_posix.c
+  ./demo/utils/freertos_hooks.c)
+
+target_include_directories(
+  coreOTA_CustomJob_Demo
+  PUBLIC "${CMAKE_CURRENT_LIST_DIR}/source" "${CMAKE_CURRENT_LIST_DIR}/demo/"
+         "${CMAKE_CURRENT_LIST_DIR}/cfg")
+
+target_link_libraries(
+    coreOTA_CustomJob_Demo
+  PRIVATE coreMQTT
+          mqtt_wrapper
+          OpenSSL::SSL
+          coreJSON
+          tinycbor
+          backoffAlgorithm
+          freertos_kernel
+          iot-core-jobs
+          iot-core-jobs-ota-parser
+          iot-core-mqtt-file-downloader)
+
+find_library(LIBRT rt)
+if(LIBRT)
+  target_link_libraries(coreOTA_CustomJob_Demo PRIVATE rt)
+endif()
